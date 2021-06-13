@@ -1,4 +1,4 @@
-package APIServer
+package apiserver
 
 // APIServer ...
 type APIServer struct{}
