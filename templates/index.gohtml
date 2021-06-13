@@ -1,0 +1,96 @@
+<html>
+    <link href="style.css" rel="stylesheet" type="text/css">
+<body>
+    <head>
+        <style>
+            html {
+              font-family: sans-serif;
+            }
+
+            table {
+              border-collapse: collapse;
+              border: 2px solid rgb(200,200,200);
+              letter-spacing: 1px;
+              font-size: 0.8rem;
+              align-items: center;
+              counter-reset: tableCount;
+            }
+
+            .counterCell:before {              
+                content: counter(tableCount); 
+                counter-increment: tableCount; 
+            }
+
+            td, th {
+              border: 1px solid rgb(190,190,190);
+              padding: 10px 20px;
+            }
+
+            th {
+              background-color: rgb(235,235,235);
+            }
+
+            td {
+              text-align: center;
+            }
+
+            tr:nth-child(even) td {
+              background-color: rgb(250,250,250);
+            }
+
+            tr:nth-child(odd) td {
+              background-color: rgb(245,245,245);
+            }
+
+            caption {
+              padding: 10px;
+            }
+
+            h1 {
+                font-size: 60px;
+                color: black;
+                text-align: center;
+            }
+            p, li {
+                font-size: 16px;
+                line-height: 2;
+                letter-spacing: 1px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <h1>Welcome to the Club!</h1>
+
+    <p>New member</p>
+
+    <form name="user" action="/add" method="post">
+        <p><label for="nm"><b>Name:</b></label>
+        <input id="nm" type="text" size="40" name="name" placeholder="Petro Petrenko"/>
+        </p>
+        <p><label for="em"><b>Name:</b></label>
+            <input id="em" type="email" size="40" name="email" placeholder="p.petrenko@gmail.com"/>
+        </p>
+        <p><input type="submit" value="Submit">
+         <input type="reset" value="Clean"></p>
+    </form>    
+    
+    <p><b>Members</b></p>
+    <table align="center">
+        <tr>
+           <th>#</th>
+           <th>Name</th>
+           <th>Email</th>
+           <th>Registration date</th>
+        </tr>
+        {{ range .Users }}
+        <tr>
+            <td class="counterCell"></td>         
+            <td>{{ .Name }}</td>
+            <td>{{ .Email }}</td>
+            <td>{{ .Registration }}</td>
+        </tr>
+        {{end}}
+    </table>
+
+</body>
+</html>
