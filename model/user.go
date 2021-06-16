@@ -1,9 +1,10 @@
 package model
 
 import (
-	"time"
-	"strings"
+	"fmt"
 	"regexp"
+	"strings"
+	"time"
 )
 
 // User ...
@@ -13,39 +14,37 @@ type User struct {
 	Registration time.Time
 }
 
-// Users ...
-type Users map[string]User
-
-func () NewUser() *User{
-	return &User(
-		Registration: time.Now(),
-	)	
+func (u *User) String() string {
+	return fmt.Sprintf("[user=%s; email=%s; registration=%s]", u.Name, u.Email, u.Registration.UTC().Format("02.01.2006"))
 }
 
-func () NewUser(name string, email string) *User, error {
-	name := strings.TrimSpase(name)
-	email := strings.TrimSpase(email)
+// Users ...
+type Users map[string]*User
 
-	if err := validateName(strings.name); err != nil {
+func NewUser(name string, email string) (*User, error) {
+	name = strings.TrimSpace(name)
+	email = strings.TrimSpace(email)
+
+	if err := validateName(name); err != nil {
 		return nil, err
 	}
 	if err := validateEmail(email); err != nil {
 		return nil, err
 	}
-	return &User(
-		Name: name,
-		Email: email,
-		Registration: time.Now(),
-	), nil	
+	return &User{
+		name,
+		email,
+		time.Now(),
+	}, nil
 }
 
 func validateName(name string) error {
 	regTempl := regexp.MustCompile(`[a-zA-Z][a-zA-Z\.]*`)
-	names := strings.Split(strings.TrimSpase(name), " ")
+	names := strings.Split(strings.TrimSpace(name), " ")
 	if len(names) < 1 {
-		return fmt.Errorf("invalid name")			
+		return fmt.Errorf("invalid name")
 	}
-	for nm := range names{
+	for _, nm := range names {
 		if !regTempl.MatchString(nm) {
 			return fmt.Errorf("name isn't valid")
 		}
@@ -54,19 +53,24 @@ func validateName(name string) error {
 }
 
 func validateEmail(email string) error {
-	regTempl := regexp.MustCompile(`[a-zA-Z\._\-]+@[a-zA-Z\._\-]+`)
-	mails := strings.Split(strings.TrimSpase(email), "@")
-	if len(mails != 2) {
+	regTempl := regexp.MustCompile(`[a-zA-Z\._\-]+`)
+	mails := strings.Split(strings.TrimSpace(email), "@")
+	if len(mails) != 2 {
+		return fmt.Errorf("email isn't valid")
+	}
+	addr, host := mails[0], mails[1]
+	if !regTempl.MatchString(addr) || !regTempl.MatchString(host) {
 		return fmt.Errorf("email isn't valid")
 	}
 	return nil
 }
 
-func CreateUsers() *Users {
-	return make(map[string]User)
+func NewUsers() Users {
+	u := make(map[string]*User)
+	return u
 }
 
-func (us *Users) AddUser(u User) error {
+func (us Users) AddUser(u *User) error {
 	email := u.Email
 	if _, ok := us[email]; ok {
 		return fmt.Errorf("email %s already exists", email)
@@ -74,5 +78,3 @@ func (us *Users) AddUser(u User) error {
 	us[email] = u
 	return nil
 }
-
-
