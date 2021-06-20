@@ -55,21 +55,19 @@ func (u *Users) ToArray() []*User {
 }
 
 func validateName(name string) error {
-	regTempl := regexp.MustCompile(`[a-zA-Z][a-zA-Z\.]*`)
-	names := strings.Split(strings.TrimSpace(name), " ")
+	regTempl := regexp.MustCompile(`^[a-zA-z][a-zA-Z]*\.*\s*[a-zA-z][a-zA-Z]*\.*$`)
+	names := strings.TrimSpace(name)
 	if len(names) < 1 {
 		return fmt.Errorf("name can't be empty")
 	}
-	for _, nm := range names {
-		if !regTempl.MatchString(nm) {
-			return fmt.Errorf("name must be composed of English letters, dots and spaces")
-		}
+	if !regTempl.MatchString(names) {
+		return fmt.Errorf("name must be composed of English letters, dots and spaces")
 	}
 	return nil
 }
 
 func validateEmail(email string) error {
-	regTempl := regexp.MustCompile(`[a-zA-Z0-9\._\-]+`)
+	regTempl := regexp.MustCompile(`^[a-zA-Z][\w\.\-_]*$`)
 	mails := strings.Split(strings.TrimSpace(email), "@")
 	if len(mails) != 2 {
 		return fmt.Errorf("email isn't valid")
