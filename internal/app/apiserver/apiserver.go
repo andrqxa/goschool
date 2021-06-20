@@ -1,6 +1,7 @@
 package apiserver
 
 import (
+	"fmt"
 	"net/http"
 	"text/template"
 
@@ -84,15 +85,17 @@ func (s *APIServer) handleAdd() http.HandlerFunc {
 		email := r.FormValue("email")
 		newUser, err := model.NewUser(name, email)
 		if err != nil {
+			s.logger.Info(fmt.Sprintf("can't add new user {name:%s, email:%s} because of %s", name, email, err))
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 		err = allUsers.AddUser(newUser)
 		if err != nil {
+			s.logger.Info(fmt.Sprintf("can't add new user {name:%s, email:%s} because of %s", name, email, err))
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
-
+		s.logger.Info(fmt.Sprintf("new user %s was added", newUser.String()))
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

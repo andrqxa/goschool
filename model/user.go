@@ -11,11 +11,11 @@ import (
 type User struct {
 	Name         string
 	Email        string
-	Registration time.Time
+	Registration string
 }
 
 func (u *User) String() string {
-	return fmt.Sprintf("[user=%s; email=%s; registration=%s]", u.Name, u.Email, u.Registration.UTC().Format("02.01.2006"))
+	return fmt.Sprintf("[user=%s; email=%s; registration=%s]", u.Name, u.Email, u.Registration)
 }
 
 // Users ...
@@ -42,7 +42,7 @@ func NewUser(name string, email string) (*User, error) {
 	return &User{
 		name,
 		email,
-		time.Now(),
+		time.Now().UTC().Format("02.01.2006"),
 	}, nil
 }
 
